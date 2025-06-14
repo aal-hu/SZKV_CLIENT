@@ -1,0 +1,42 @@
+ScreenManager:
+    PinputScreen:
+    Appscreen:
+
+<PinputScreen>:
+    name: "pinput"
+
+    
+<AppScreen>:
+    name: "main"
+        
+    md_bg_color: app.theme_cls.backgroundColor
+
+    MDFloatLayout:    
+
+        MDLabel:
+            id: cons_infos
+            text: root.labeltxt
+            font_style: "Display"
+            role: "medium"
+            #halign: "center"
+            size_hint: (1, 0.2)
+            pos_hint: {"x": 0.05, "top": 1}
+          
+
+    MDBoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1, 0.3)
+        padding: dp(40)
+        spacing: dp(70)
+
+        MDFabButton:
+            icon: "coffee"
+            on_release: root.send_coffee_request()
+        MDFabButton:
+            icon: "coffee-maker-check"
+            on_release: root.confirm_coffee_request()
+        MDFabButton:
+            icon: "view-list"
+            on_release: root.list_consumptions()
+
+

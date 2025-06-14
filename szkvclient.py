@@ -11,7 +11,7 @@ CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 if __name__ == "__main__":
     response = requests.get(
         f"{BASE_URL}/stats",
-        json={"pin": 1111},
+        params={"pin": 1111},
         verify=CERT_VERIFY
     )
     print("A válasz: ", response.json())
