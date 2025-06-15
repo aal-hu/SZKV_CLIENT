@@ -1,13 +1,13 @@
 ScreenManager:
     PinputScreen:
-    Appscreen:
+    AppScreen:
 
 <PinputScreen>:
     name: "pinput"
 
     
 <AppScreen>:
-    name: "main"
+    name: "app_screen"
         
     md_bg_color: app.theme_cls.backgroundColor
 
@@ -30,13 +30,14 @@ ScreenManager:
         spacing: dp(70)
 
         MDFabButton:
-            icon: "coffee"
-            on_release: root.send_coffee_request()
+            icon: "view-list"
+            on_release: root.list_consumptions()
         MDFabButton:
             icon: "coffee-maker-check"
             on_release: root.confirm_coffee_request()
         MDFabButton:
-            icon: "view-list"
-            on_release: root.list_consumptions()
+            icon: "coffee"
+            on_release: root.send_coffee_request()
+
 
 

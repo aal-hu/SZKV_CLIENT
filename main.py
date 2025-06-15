@@ -17,6 +17,7 @@ from kivymd.uix.textfield import (
     MDTextFieldMaxLengthText,
     MDTextFieldTrailingIcon,
     MDTextFieldHelperText)
+from kivy.metrics import dp
 
 
 if platform == "android":
@@ -69,21 +70,22 @@ class AppScreen(MDScreen):
         pass
 
     def save_pin(self):
+        print(self.pin)
         with open(self.pin_path, 'w') as file:
             file.write(str(self.pin))
   
 
-class MyApp(App):
+class SzkvApp(App):
     def __init__(self, **kwargs):
-        super(MyApp, self).__init__(**kwargs)
+        super(SzkvApp, self).__init__(**kwargs)
 
     def build(self):
         self.theme_cls.primary_palette = "Brown"
         self.theme_cls.primary_hue = "500"
-        self.theme_cls.theme_style = "Light"
-        return MainScreen()
+        #self.theme_cls.theme_style = "Light"
+        return AppScreen()
    
-   def on_start(self):
+    def on_start(self):
         # Ellenőrizzük, hogy a pin.txt létezik-e, ha nem, akkor létrehozzuk
         pin_path = AppScreen().get_pin_path()
         if not os.path.exists(pin_path):
@@ -91,28 +93,61 @@ class MyApp(App):
             with open(pin_path, 'w') as file:
                 file.write('0')
         AppScreen().load_pin()        
-        if Appscreen().pin == 0:
-            root.app.current = 'pinput'
-            show_pinput_dialog()
+        if AppScreen().pin == 0:
+            self.root.current = 'pinput'
+            self.show_pinput_dialog()
         else:
-            root.app.current = 'main'
+            self.root.current = 'app_screen'
 
-def show_pinput_dialog(self):
-    self.pinput_field = MDTextField(
-        MDTextFieldHintText(
-            text="Add meg a PIN kódot (4 számjegy):"
-        ),
-        MDTextFieldMaxLengthText(
-            max_text_length=4
-        ),
-        mode="rectangle",
-        size_hint=(0.8, None),
-        height=50,
-        pos_hint={"center_x": 0.5, "center_y": 0.5},
-    )
-    
+    def show_pinput_dialog(self):
+        self.pinput_field = MDTextField(
+            MDTextFieldHintText(
+                text="Add meg a PIN kódot (4 számjegy):"
+            ),
+            MDTextFieldMaxLengthText(
+                max_text_length=4
+            ),
+            mode="filled",
+            size_hint=(0.8, None),
+            height=50,
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+        )
+        dialog = MDDialog(
+            MDDialogHeadlineText(
+                text="PIN kód megadása"
+            ),
+            MDDialogContentContainer(
+                self.pinput_field
+            ),
+            MDDialogButtonContainer(
+                MDButton(
+                    MDButtonText(text="Mégse"),
+                    style="elevated",
+                    on_release=lambda x: dialog.dismiss()
+                ),
+                MDButton(
+                    MDButtonText(text="OK"),
+                    style="elevated",
+                    on_release=lambda x: self.set_pin(dialog)
+                ),
+                spacing=dp(30)
+            ),
+            size_hint=(0.8, None),
+            height=200,
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+        )
+        dialog.open()
+    def set_pin(self, dialog):
+        pin = self.pinput_field.text
+        if len(pin) == 4 and pin.isdigit():
+            AppScreen().pin = int(pin)
+            AppScreen().save_pin()
+            dialog.dismiss()
+            self.root.current = 'app_screen'
+        else:
+            self.pinput_field.error = True 
 
 
   
 if __name__ == '__main__':
-    MyApp().run()
+    SzkvApp().run()
