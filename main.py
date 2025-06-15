@@ -18,6 +18,13 @@ from kivymd.uix.textfield import (
     MDTextFieldTrailingIcon,
     MDTextFieldHelperText)
 from kivy.metrics import dp
+import requests
+import urllib3
+
+urllib3.disable_warnings()
+
+BASE_URL = "https://192.168.0.14:5000"
+CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
 
 if platform == "android":
@@ -36,16 +43,15 @@ class AppScreen(MDScreen):
         self.pin_path = self.get_pin_path()
         self.pin = 0
         self.load_pin()
-        self.update_label()
-              
-        
+        self.update_label("SZKV kávégép app") 
+        self.get_consumer_name()
+
     def get_pin_path(self):
         # Mentési hely platformfüggően
         if platform == "android":
             return os.path.join(App.get_running_app().user_data_dir, "pin.txt")
         else:
             return os.path.join("data", "pin.txt")
-
    
     def load_pin(self):
         try:
@@ -53,11 +59,11 @@ class AppScreen(MDScreen):
                 self.pin = int(file.read())
         except (FileNotFoundError, ValueError):
             self.pin = 0
-            self.save_pin()
-        #self.update_label()
 
-    def update_label(self):
-        self.labeltxt = 'Felhasználható belépő: '
+    def update_label(self, text=None):
+        if text:
+            self.labeltxt = text
+        
 
     def send_coffee_request(self):
         self.update_label()
@@ -69,11 +75,18 @@ class AppScreen(MDScreen):
     def list_consumptions(self):
         pass
 
-    def save_pin(self):
-        print(self.pin)
-        with open(self.pin_path, 'w') as file:
-            file.write(str(self.pin))
-  
+    def get_consumer_name(self):
+        response = requests.get(
+            f"{BASE_URL}/consumer_name",
+            params={"pin": self.pin},
+            verify=CERT_VERIFY,
+            timeout=
+        )
+        if response.status_code == 200:   
+            self.update_label("Bejelentkezett: "+response.json())
+        else:
+            self.update_label("Hiba történt a név lekérésekor")
+
 
 class SzkvApp(App):
     def __init__(self, **kwargs):
@@ -137,16 +150,16 @@ class SzkvApp(App):
             pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
         dialog.open()
+
     def set_pin(self, dialog):
         pin = self.pinput_field.text
         if len(pin) == 4 and pin.isdigit():
-            AppScreen().pin = int(pin)
-            AppScreen().save_pin()
+            with open(AppScreen().get_pin_path(), 'w') as file:
+                file.write(pin)
             dialog.dismiss()
             self.root.current = 'app_screen'
         else:
             self.pinput_field.error = True 
-
 
   
 if __name__ == '__main__':

@@ -16,28 +16,37 @@ ScreenManager:
         MDLabel:
             id: cons_infos
             text: root.labeltxt
-            font_style: "Display"
-            role: "medium"
-            #halign: "center"
-            size_hint: (1, 0.2)
-            pos_hint: {"x": 0.05, "top": 1}
+            font_style: "Headline"
+            role: "small"
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.width, None
+            #size_hint: (1, 0.2)
+            pos_hint: {"x": 0.05, "top": 0.95}
           
 
     MDBoxLayout:
         orientation: 'horizontal'
         size_hint: (1, 0.3)
         padding: dp(40)
-        spacing: dp(70)
+        spacing: dp(60)
 
         MDFabButton:
             icon: "view-list"
+            style: "large"            
             on_release: root.list_consumptions()
         MDFabButton:
             icon: "coffee-maker-check"
+            style: "large"            
             on_release: root.confirm_coffee_request()
         MDFabButton:
             icon: "coffee"
+            style: "large"
             on_release: root.send_coffee_request()
+  
 
+
+   
 
 
