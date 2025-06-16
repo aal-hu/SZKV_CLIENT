@@ -31,8 +31,9 @@ def safe_request(func):
     def wrapper(*args, **kwargs):
         try:
             response = func(*args, **kwargs)
-            response.raise_for_status()  # Raise an error for bad responses
-            return response
+            if response:
+                response.raise_for_status()  # Raise an error for bad responses
+                return response
         except (RequestException, Timeout, ConnectionError, HTTPError) as e:
             print(f"Nem sikerült adatot lekérni: {e}")
             return None
@@ -41,7 +42,7 @@ def safe_request(func):
 @safe_request
 def get_data(url, params=None):
     response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
-    return response.json() if response.status_code == 200 else None
+    return response if response.status_code == 200 else None
 
 BASE_URL = "https://192.168.0.14:5000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
@@ -96,9 +97,12 @@ class AppScreen(MDScreen):
         pass
 
     def get_consumer_name(self):
-        name = get_data(f"{BASE_URL}/consumer_name", params={"pin": self.pin})
-        if name:
-            self.update_label("Bejelentkezett: " + name)
+        response = get_data(f"{BASE_URL}/consumer_names", params={"pin": self.pin})
+        if response:
+            if response.status_code == 200:
+                self.update_label("Bejelentkezett: " + response.json())
+            else:
+                self.update_label(str(response.status_code)+response.text)
         else:
             self.update_label("Hiba történt a név lekérésekor")
 
