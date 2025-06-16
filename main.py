@@ -19,9 +19,29 @@ from kivymd.uix.textfield import (
     MDTextFieldHelperText)
 from kivy.metrics import dp
 import requests
+from requests.exceptions import RequestException, Timeout, ConnectionError, HTTPError
+from functools import wraps
 import urllib3
 
 urllib3.disable_warnings()
+
+
+def safe_request(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            response = func(*args, **kwargs)
+            response.raise_for_status()  # Raise an error for bad responses
+            return response
+        except (RequestException, Timeout, ConnectionError, HTTPError) as e:
+            print(f"Nem sikerült adatot lekérni: {e}")
+            return None
+    return wrapper
+
+@safe_request
+def get_data(url, params=None):
+    response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
+    return response.json() if response.status_code == 200 else None
 
 BASE_URL = "https://192.168.0.14:5000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
@@ -76,14 +96,9 @@ class AppScreen(MDScreen):
         pass
 
     def get_consumer_name(self):
-        response = requests.get(
-            f"{BASE_URL}/consumer_name",
-            params={"pin": self.pin},
-            verify=CERT_VERIFY,
-            timeout=
-        )
-        if response.status_code == 200:   
-            self.update_label("Bejelentkezett: "+response.json())
+        name = get_data(f"{BASE_URL}/consumer_name", params={"pin": self.pin})
+        if name:
+            self.update_label("Bejelentkezett: " + name)
         else:
             self.update_label("Hiba történt a név lekérésekor")
 
