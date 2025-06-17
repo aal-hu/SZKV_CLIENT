@@ -25,7 +25,7 @@ import urllib3
 
 urllib3.disable_warnings()
 
-
+# Define a decorator to handle exceptions and log errors
 def safe_request(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -39,6 +39,7 @@ def safe_request(func):
             return None
     return wrapper
 
+    
 @safe_request
 def get_data(url, params=None):
     response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
