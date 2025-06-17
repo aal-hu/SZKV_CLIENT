@@ -44,6 +44,12 @@ def get_data(url, params=None):
     response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
     return response if response.status_code == 200 else None
 
+@safe_request
+def post_data(url, data=None, json=None):
+    response = requests.post(url, data=data, json=json, verify=CERT_VERIFY, timeout=10)
+    return response if response.status_code == 200 else None
+
+
 BASE_URL = "https://192.168.0.14:5000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
@@ -65,7 +71,7 @@ class AppScreen(MDScreen):
         self.pin = 0
         self.load_pin()
         self.update_label("SZKV kávégép app") 
-        self.get_consumer_name()
+        self.get_consumer_data()
 
     def get_pin_path(self):
         # Mentési hely platformfüggően
@@ -87,24 +93,47 @@ class AppScreen(MDScreen):
         
 
     def send_coffee_request(self):
-        self.update_label()
+        response = post_data(f"{BASE_URL}/coffee_request", json={"pin": self.pin})"})
+        if response:
+            if response.status_code == 200:
+                #self.update_label("Kávé kérés elküldve!")
+            else:
+                self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
+        else:
+            self.update_label("Hiba történt a kávé kérés elküldésekor!")
+
        
 
     def confirm_coffee_request(self):
-        self.update_label()
+        response = post_data(f"{BASE_URL}/confirm_coffee_request", json={"pin": self.pin})"})
+        if response:
+            if response.status_code == 200:
+                #self.update_label("Kávé kérés elküldve!")
+            else:
+                self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
+        else:
+            self.update_label("Hiba történt a kávé kérés elküldésekor!")
+
+        self.update_label(self.get_consumer_data())
        
     def list_consumptions(self):
         pass
 
-    def get_consumer_name(self):
-        response = get_data(f"{BASE_URL}/consumer_names", params={"pin": self.pin})
+    def get_consumer_data(self ):
+        response = get_data(f"{BASE_URL}/consumer_data", params={"pin": self.pin})
         if response:
             if response.status_code == 200:
-                self.update_label("Bejelentkezett: " + response.json())
+                self.update_label("Bejelentkezett: " + response.json('name') + "\n" +
+                                  "Fogyasztások: " + str(response.json().get('consumptions'))+ "\n" +
+                                  "Fizetendő fogyasztások: " + str(response.json().get('cons_payable')) + " \n" +
+                                  "Fizetendő összeg: " + str(response.json().get('payable')))
             else:
-                self.update_label(str(response.status_code)+response.text)
+                self.update_label(f"Hiba történt: {response.status_code} - {response.text}") 
         else:
-            self.update_label("Hiba történt a név lekérésekor")
+            self.update_label("Hiba történt az adat lekérésnél!")
+
+class ListScreen(MDScreen):
+    pass
 
 
 class SzkvApp(App):
