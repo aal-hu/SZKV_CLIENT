@@ -95,7 +95,7 @@ class AppScreen(MDScreen):
         
 
     def send_coffee_request(self):
-        response = post_data(f"{BASE_URL}/coffee_request", json={"pin": self.pin})
+        response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
         if response:
             if response.status_code == 200:
                 MDSnackbar(
@@ -105,13 +105,10 @@ class AppScreen(MDScreen):
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
                 ).open()
-
-                pass
-                #self.update_label("Kávé kérés elküldve!")
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
         else:
-            self.update_label("Hiba történt a kávé kérés elküldésekor!")
+            self.update_label("Hiba történt a kávé kérés elküldésénél!")
 
        
 
@@ -119,12 +116,17 @@ class AppScreen(MDScreen):
         response = post_data(f"{BASE_URL}/confirm_coffee_request", json={"pin": self.pin})
         if response:
             if response.status_code == 200:
-                pass
-                #self.update_label("Kávé kérés elküldve!")
+                MDSnackbar(
+                    MDSnackbarSupportingText(text="Kávé fogyasztás rögzítve. "),
+                        y=dp(24),
+                        pos_hint={"center_x": .5},
+                        size_hint_x=0.5,
+                        background_color=self.theme_cls.onPrimaryContainerColor,
+                ).open()
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
         else:
-            self.update_label("Hiba történt a kávé kérés elküldésekor!")
+            self.update_label("Hiba történt a kávé nyugta elküldésénél!")
 
         self.update_label(self.get_consumer_data())
        
@@ -135,10 +137,10 @@ class AppScreen(MDScreen):
         response = get_data(f"{BASE_URL}/consumer_data", params={"pin": self.pin})
         if response:
             if response.status_code == 200:
-                self.update_label("Bejelentkezett: " + response.json('name') + "\n" +
+                self.update_label("Bejelentkezett: " + response.json().get('name') + "\n" +
                                   "Fogyasztások: " + str(response.json().get('consumptions'))+ "\n" +
                                   "Fizetendő fogyasztások: " + str(response.json().get('cons_payable')) + " \n" +
-                                  "Fizetendő összeg: " + str(response.json().get('payable')))
+                                  "Fizetendő összeg: " + str(response.json().get('payable')) + " Ft\n" +)
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}") 
         else:
