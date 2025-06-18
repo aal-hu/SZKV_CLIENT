@@ -17,6 +17,7 @@ from kivymd.uix.textfield import (
     MDTextFieldMaxLengthText,
     MDTextFieldTrailingIcon,
     MDTextFieldHelperText)
+from kivymd.uix.snackbar import MDSnackbar, MDSnackbarSupportingText
 from kivy.metrics import dp
 import requests
 from requests.exceptions import RequestException, Timeout, ConnectionError, HTTPError
@@ -94,9 +95,18 @@ class AppScreen(MDScreen):
         
 
     def send_coffee_request(self):
-        response = post_data(f"{BASE_URL}/coffee_request", json={"pin": self.pin})"})
+        response = post_data(f"{BASE_URL}/coffee_request", json={"pin": self.pin})
         if response:
             if response.status_code == 200:
+                MDSnackbar(
+                    MDSnackbarSupportingText(text="Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 30mp-en belül, különben az igény törlődik. "),
+                        y=dp(24),
+                        pos_hint={"center_x": .5},
+                        size_hint_x=0.5,
+                        background_color=self.theme_cls.onPrimaryContainerColor,
+                ).open()
+
+                pass
                 #self.update_label("Kávé kérés elküldve!")
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
@@ -106,9 +116,10 @@ class AppScreen(MDScreen):
        
 
     def confirm_coffee_request(self):
-        response = post_data(f"{BASE_URL}/confirm_coffee_request", json={"pin": self.pin})"})
+        response = post_data(f"{BASE_URL}/confirm_coffee_request", json={"pin": self.pin})
         if response:
             if response.status_code == 200:
+                pass
                 #self.update_label("Kávé kérés elküldve!")
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
