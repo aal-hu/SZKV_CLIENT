@@ -96,6 +96,8 @@ class AppScreen(MDScreen):
 
     def send_coffee_request(self):
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
+        print(f"Response: {response}")
+        self.update_label("Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 10mp-en belül, különben az igény törlődik. ")
         if response:
             if response.status_code == 200:
                 MDSnackbar(
@@ -140,7 +142,7 @@ class AppScreen(MDScreen):
                 self.update_label("Bejelentkezett: " + response.json().get('name') + "\n" +
                                   "Fogyasztások: " + str(response.json().get('consumptions'))+ "\n" +
                                   "Fizetendő fogyasztások: " + str(response.json().get('cons_payable')) + " \n" +
-                                  "Fizetendő összeg: " + str(response.json().get('payable')) + " Ft\n" +)
+                                  "Fizetendő összeg: " + str(response.json().get('payable')) + " Ft\n")
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}") 
         else:
