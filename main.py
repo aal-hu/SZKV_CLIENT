@@ -32,25 +32,24 @@ def safe_request(func):
     def wrapper(*args, **kwargs):
         try:
             response = func(*args, **kwargs)
-            if response:
-                response.raise_for_status()  # Raise an error for bad responses
-                return response
-        except (RequestException, Timeout, ConnectionError, HTTPError) as e:
+            #response.raise_for_status()  # Raise an error for bad responses
+            return response
+        except HTTPError as e:    
+            return e.response
+        except (RequestException, Timeout, ConnectionError) as e:
             print(f"Nem sikerült adatot lekérni: {e}")
             return None
     return wrapper
 
     
-@safe_request
+#@safe_request
 def get_data(url, params=None):
     response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
-    #return response if response.status_code == 200 else None
     return response
 
-@safe_request
+#@safe_request
 def post_data(url, data=None, json=None):
     response = requests.post(url, data=data, json=json, verify=CERT_VERIFY, timeout=10)
-    #return response if response.status_code == 200 else None
     return response
 
 BASE_URL = "https://192.168.0.14:5000"
