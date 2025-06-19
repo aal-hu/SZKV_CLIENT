@@ -24,10 +24,12 @@ from requests.exceptions import RequestException, Timeout, ConnectionError, HTTP
 from functools import wraps
 import urllib3
 
+
 urllib3.disable_warnings()
 
 # Define a decorator to handle exceptions and log errors
 def safe_request(func):
+    
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
@@ -37,17 +39,18 @@ def safe_request(func):
         except HTTPError as e:    
             return e.response
         except (RequestException, Timeout, ConnectionError) as e:
-            print(f"Nem sikerült adatot lekérni: {e}")
-            return None
+            print(f"Request failed: {e}")
+            return None  # Return None for any request-related errors
+        
     return wrapper
 
-    
-#@safe_request
+
+@safe_request
 def get_data(url, params=None):
     response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
     return response
 
-#@safe_request
+@safe_request
 def post_data(url, data=None, json=None):
     response = requests.post(url, data=data, json=json, verify=CERT_VERIFY, timeout=10)
     return response
@@ -96,10 +99,9 @@ class AppScreen(MDScreen):
 
     def send_coffee_request(self):
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
-        print(f"Response error: {response.json().get('error') if response else 'No response'}")
-        self.update_label("Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 10mp-en belül, különben az igény törlődik. ")
-        #print(f"Response status code: {response.status_code if response else 'No response'}")
-        if response:
+        #print(response.json().get('error'))
+        #print(response)     
+        if response is not None:
             if response.status_code == 200:
                 MDSnackbar(
                     MDSnackbarSupportingText(text="Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 10mp-en belül, különben az igény törlődik. "),
@@ -108,10 +110,18 @@ class AppScreen(MDScreen):
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
                 ).open()
-            else:
-                self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
+            elif response.status_code == 400:
+                MDSnackbar(                
+                    MDSnackbarSupportingText(text=response.json().get('error')),
+                        y=dp(24),
+                        pos_hint={"center_x": .5},
+                        size_hint_x=0.5,
+                        background_color=self.theme_cls.onPrimaryContainerColor,
+                ).open()
+
+                #self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
         else:
-            self.update_label("Hiba történt a kávé kérés elküldésénél!")
+            self.update_label("Nincs szerverkapcsolat!")
 
        
 
