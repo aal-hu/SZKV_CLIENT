@@ -44,13 +44,14 @@ def safe_request(func):
 @safe_request
 def get_data(url, params=None):
     response = requests.get(url, params=params, verify=CERT_VERIFY, timeout=10)
-    return response if response.status_code == 200 else None
+    #return response if response.status_code == 200 else None
+    return response
 
 @safe_request
 def post_data(url, data=None, json=None):
     response = requests.post(url, data=data, json=json, verify=CERT_VERIFY, timeout=10)
-    return response if response.status_code == 200 else None
-
+    #return response if response.status_code == 200 else None
+    return response
 
 BASE_URL = "https://192.168.0.14:5000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
@@ -96,12 +97,13 @@ class AppScreen(MDScreen):
 
     def send_coffee_request(self):
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
-        print(f"Response: {response}")
+        print(f"Response error: {response.json().get('error') if response else 'No response'}")
         self.update_label("Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 10mp-en belül, különben az igény törlődik. ")
+        #print(f"Response status code: {response.status_code if response else 'No response'}")
         if response:
             if response.status_code == 200:
                 MDSnackbar(
-                    MDSnackbarSupportingText(text="Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 30mp-en belül, különben az igény törlődik. "),
+                    MDSnackbarSupportingText(text="Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 10mp-en belül, különben az igény törlődik. "),
                         y=dp(24),
                         pos_hint={"center_x": .5},
                         size_hint_x=0.5,
