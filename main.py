@@ -17,6 +17,7 @@ from kivymd.uix.textfield import (
     MDTextFieldMaxLengthText,
     MDTextFieldTrailingIcon,
     MDTextFieldHelperText)
+from kivymd.uix.list import *
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarSupportingText
 from kivy.metrics import dp
 import requests
@@ -99,8 +100,6 @@ class AppScreen(MDScreen):
 
     def send_coffee_request(self):
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
-        #print(response.json().get('error'))
-        #print(response)     
         if response is not None:
             if response.status_code == 200:
                 MDSnackbar(
@@ -118,8 +117,6 @@ class AppScreen(MDScreen):
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
                 ).open()
-
-                #self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
         else:
             self.update_label("Nincs szerverkapcsolat!")
 
@@ -146,8 +143,6 @@ class AppScreen(MDScreen):
                 ).open()
         self.update_label(self.get_consumer_data())
        
-    def list_consumptions(self):
-        pass
 
     def get_consumer_data(self ):
         response = get_data(f"{BASE_URL}/consumer_data", params={"pin": self.pin})
@@ -162,7 +157,30 @@ class AppScreen(MDScreen):
         else:
             self.update_label("Hiba történt az adat lekérésnél!")
 
+
+
+
 class ListScreen(MDScreen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+    def list_consumptions(self):
+        list_data = get_data(f"{BASE_URL}/consumption_data",)
+        if list_data is not None:
+            if list_data.status_code == 200:
+                json_data = list_data.json()
+                cups = json_data['data']
+                for cup in cups:
+                    item = MDListItem( MDListItemHeadlineText(text=cup['name']),
+                            MDListItemSupportingText(text=" "),
+                            pos_hint={"center_x": .5, "center_y": .5},
+                            size_hint_x=.8)
+                    self.ids.list_cons.add_widget(item)    
+                    #self.root.ids.list_cons.add_widget(MDDivider())    
+            else:
+                self.update_label(f"Hiba történt: {list_data.status_code} - {list_data.text}")
+
     pass
 
 

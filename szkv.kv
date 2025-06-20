@@ -2,6 +2,7 @@ ScreenManager:
     PinputScreen:
     AppScreen:
     ListScreen:
+        id: list_screen
 
 <PinputScreen>:
     name: "pinput"
@@ -36,7 +37,7 @@ ScreenManager:
         MDFabButton:
             icon: "view-list"
             style: "large"            
-            on_release: root.current = "cons_list"; root.list_consumptions()
+            on_release:  app.root.ids.list_screen.list_consumptions(); root.current = "cons_list"
         MDFabButton:
             icon: "coffee-maker-check"
             style: "large"            
@@ -55,7 +56,7 @@ ScreenManager:
         MDScrollView:
 
             MDList:
-                id: list_consumptions
+                id: list_cons
 
 
 
