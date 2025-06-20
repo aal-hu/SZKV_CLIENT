@@ -127,7 +127,7 @@ class AppScreen(MDScreen):
 
     def confirm_coffee_request(self):
         response = post_data(f"{BASE_URL}/confirm_coffee_request", json={"pin": self.pin})
-        if response:
+        if response is not None:
             if response.status_code == 200:
                 MDSnackbar(
                     MDSnackbarSupportingText(text="Kávé fogyasztás rögzítve. "),
@@ -136,11 +136,14 @@ class AppScreen(MDScreen):
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
                 ).open()
-            else:
-                self.update_label(f"Hiba történt: {response.status_code} - {response.text}")
-        else:
-            self.update_label("Hiba történt a kávé nyugta elküldésénél!")
-
+            elif response.status_code == 400:
+                MDSnackbar(                
+                    MDSnackbarSupportingText(text=response.json().get('error')),
+                        y=dp(24),
+                        pos_hint={"center_x": .5},
+                        size_hint_x=0.5,
+                        background_color=self.theme_cls.onPrimaryContainerColor,
+                ).open()
         self.update_label(self.get_consumer_data())
        
     def list_consumptions(self):
