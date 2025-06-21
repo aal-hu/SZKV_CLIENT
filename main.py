@@ -222,9 +222,6 @@ class SzkvApp(App):
 
     def show_pinput_dialog(self):
         self.pinput_field = MDTextField(
-            #MDTextFieldHintText(
-            #    text="Add meg a PIN kódot (4 számjegy):"
-            #),
             MDTextFieldMaxLengthText(
                 max_text_length=4
             ),
