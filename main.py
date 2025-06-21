@@ -83,7 +83,6 @@ class AppScreen(MDScreen):
             self.update_label("A PIN kód megadása után \n indítsd újra az alkalmazást!") 
         else:    
             self.get_consumer_data()
-        #self.list_consumptions()
 
     def get_pin_path(self):
         # Mentési hely platformfüggően
@@ -105,7 +104,6 @@ class AppScreen(MDScreen):
         
 
     def send_coffee_request(self):
-        print("Sending coffee request with pin:", self.pin)
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
         if response is not None:
             if response.status_code == 200:
@@ -224,15 +222,15 @@ class SzkvApp(App):
 
     def show_pinput_dialog(self):
         self.pinput_field = MDTextField(
-            MDTextFieldHintText(
-                text="Add meg a PIN kódot (4 számjegy):"
-            ),
+            #MDTextFieldHintText(
+            #    text="Add meg a PIN kódot (4 számjegy):"
+            #),
             MDTextFieldMaxLengthText(
                 max_text_length=4
             ),
-            mode="filled",
-            size_hint=(0.8, None),
-            height=50,
+            mode="outlined",
+            size_hint=(0.9, None),
+            height=70,
             pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
         dialog = MDDialog(
