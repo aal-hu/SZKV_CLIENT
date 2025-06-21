@@ -1,5 +1,6 @@
 import os
 from kivymd.app import MDApp as App
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
 from kivy.properties import StringProperty
@@ -56,7 +57,9 @@ def post_data(url, data=None, json=None):
     response = requests.post(url, data=data, json=json, verify=CERT_VERIFY, timeout=10)
     return response
 
-BASE_URL = "https://192.168.0.14:5000"
+
+#BASE_URL = "https://192.168.0.14:5000"
+BASE_URL = "https://bluefre.ignorelist.com:48000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
 
@@ -78,7 +81,7 @@ class AppScreen(MDScreen):
         self.load_pin()
         self.update_label("SZKV kávégép app") 
         self.get_consumer_data()
-        self.list_consumptions()
+        #self.list_consumptions()
 
     def get_pin_path(self):
         # Mentési hely platformfüggően
@@ -164,15 +167,27 @@ class AppScreen(MDScreen):
             if list_data.status_code == 200:
                 json_data = list_data.json()
                 cups = json_data['data']
+                print(len(cups))
                 for cup in cups:
                     item = MDListItem( MDListItemHeadlineText(text=cup['name']),
                             MDListItemSupportingText(text=" "),
                             pos_hint={"center_x": .5, "center_y": .5},
                             size_hint_x=.8)
-                    ListScreen().list_cons.add_widget(item)    
+                    AppScreen().ids.list_cons.add_widget(item)    
                     #self.root.ids.list_cons.add_widget(MDDivider())    
             else:
                 self.update_label(f"Hiba történt: {list_data.status_code} - {list_data.text}")
+
+
+    def uc(self):  
+        MDSnackbar(
+            MDSnackbarSupportingText(text="Under construction... "),
+                y=dp(24),
+                pos_hint={"center_x": .5},
+                size_hint_x=0.5,
+                background_color=self.theme_cls.onPrimaryContainerColor,
+        ).open()
+
 
 
 
@@ -193,7 +208,9 @@ class SzkvApp(App):
         self.theme_cls.primary_palette = "Brown"
         self.theme_cls.primary_hue = "500"
         #self.theme_cls.theme_style = "Light"
-        return AppScreen()
+        #kv_path = os.path.join(root_dir, "views", "main.kv")
+        return Builder.load_file('szkv.kv')        
+        #return AppScreen()
    
     def on_start(self):
         # Ellenőrizzük, hogy a pin.txt létezik-e, ha nem, akkor létrehozzuk

@@ -26,6 +26,13 @@ ScreenManager:
             text_size: self.width, None
             #size_hint: (1, 0.2)
             pos_hint: {"x": 0.05, "top": 0.95}
+
+        #MDScrollView:
+            #size_hint: (1, 1)
+            #pos_hint: {"top": .9, "bottom": 0, "left": 0, "right": 1 }
+
+            #MDList:
+                #id: list_cons
           
 
     MDBoxLayout:
@@ -37,7 +44,8 @@ ScreenManager:
         MDFabButton:
             icon: "view-list"
             style: "large"            
-            on_release: root.current = "cons_list"
+            #on_release: root.list_consumptions(); app.root.current = "cons_list"
+            on_release: root.uc()
         MDFabButton:
             icon: "coffee-maker-check"
             style: "large"            
@@ -49,14 +57,17 @@ ScreenManager:
   
 <ListScreen>:
     name: "cons_list"
+    md_bg_color: app.theme_cls.backgroundColor
 
     MDBoxLayout:
         orientation: 'vertical'
+        size_hint: (1,1)
 
         MDScrollView:
-
+            size_hint: (1, 1)
+            pos_hint: {"top": .9, "bottom": 0, "left": 0, "right": 1 }
             MDList:
-                id: list_cons
+                #id: root.app_screen.list.cons
 
 
 
