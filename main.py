@@ -78,6 +78,7 @@ class AppScreen(MDScreen):
         self.load_pin()
         self.update_label("SZKV kávégép app") 
         self.get_consumer_data()
+        self.list_consumptions()
 
     def get_pin_path(self):
         # Mentési hely platformfüggően
@@ -157,14 +158,6 @@ class AppScreen(MDScreen):
         else:
             self.update_label("Hiba történt az adat lekérésnél!")
 
-
-
-
-class ListScreen(MDScreen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
     def list_consumptions(self):
         list_data = get_data(f"{BASE_URL}/consumption_data",)
         if list_data is not None:
@@ -176,10 +169,18 @@ class ListScreen(MDScreen):
                             MDListItemSupportingText(text=" "),
                             pos_hint={"center_x": .5, "center_y": .5},
                             size_hint_x=.8)
-                    self.ids.list_cons.add_widget(item)    
+                    ListScreen().list_cons.add_widget(item)    
                     #self.root.ids.list_cons.add_widget(MDDivider())    
             else:
                 self.update_label(f"Hiba történt: {list_data.status_code} - {list_data.text}")
+
+
+
+
+
+class ListScreen(MDScreen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     pass
 
