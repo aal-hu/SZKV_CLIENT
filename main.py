@@ -80,7 +80,7 @@ class AppScreen(MDScreen):
         self.pin = 0
         self.load_pin()
         if self.pin == 0:
-            self.update_label("SZKV kávégép app") 
+            self.update_label("A PIN kód megadása után \n indítsd újra az alkalmazást!") 
         else:    
             self.get_consumer_data()
         #self.list_consumptions()
@@ -105,6 +105,7 @@ class AppScreen(MDScreen):
         
 
     def send_coffee_request(self):
+        print("Sending coffee request with pin:", self.pin)
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
         if response is not None:
             if response.status_code == 200:
@@ -191,10 +192,6 @@ class AppScreen(MDScreen):
         ).open()
 
 
-
-
-
-
 class ListScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -209,10 +206,7 @@ class SzkvApp(App):
     def build(self):
         self.theme_cls.primary_palette = "Brown"
         self.theme_cls.primary_hue = "500"
-        #self.theme_cls.theme_style = "Light"
-        #kv_path = os.path.join(root_dir, "views", "main.kv")
         return Builder.load_file('szkv.kv')        
-        #return AppScreen()
    
     def on_start(self):
         # Ellenőrizzük, hogy a pin.txt létezik-e, ha nem, akkor létrehozzuk
