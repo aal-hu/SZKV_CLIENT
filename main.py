@@ -58,8 +58,8 @@ def post_data(url, data=None, json=None):
     return response
 
 
-#BASE_URL = "https://192.168.0.14:5000"
-BASE_URL = "https://bluefre.ignorelist.com:48000"
+BASE_URL = "https://192.168.0.14:5000"
+#BASE_URL = "https://bluefre.ignorelist.com:48000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
 
@@ -151,7 +151,8 @@ class AppScreen(MDScreen):
 
     def get_consumer_data(self ):
         response = get_data(f"{BASE_URL}/consumer_data", params={"pin": self.pin})
-        if response:
+        print(response)
+        if response is not None:
             if response.status_code == 200:
                 self.update_label("Bejelentkezett: " + response.json().get('name') + "\n" +
                                   "Fogyasztások: " + str(response.json().get('consumptions'))+ "\n" +
@@ -241,7 +242,7 @@ class SzkvApp(App):
                 MDButton(
                     MDButtonText(text="Mégse"),
                     style="elevated",
-                    on_release=lambda x: dialog.dismiss()
+                    on_release=lambda x: self.exit_app(dialog)
                 ),
                 MDButton(
                     MDButtonText(text="OK"),
@@ -258,13 +259,44 @@ class SzkvApp(App):
 
     def set_pin(self, dialog):
         pin = self.pinput_field.text
-        if len(pin) == 4 and pin.isdigit():
+        if len(pin) == 4 and pin.isdigit() and self.check_pin(pin):
             with open(AppScreen().get_pin_path(), 'w') as file:
                 file.write(pin)
             dialog.dismiss()
             self.root.current = 'app_screen'
         else:
             self.pinput_field.error = True 
+
+    def check_pin(self, pin):
+        # Ellenőrizzük, hogy a PIN kód helyes-e
+        response = get_data(f"{BASE_URL}/consumer_data", params={"pin": pin})
+        print(response)
+        if response is not None:
+            if response.status_code == 200:
+                return True
+            else:
+                MDSnackbar(
+                    MDSnackbarSupportingText(text="Hibás PIN kód!"),
+                        y=dp(24),
+                        pos_hint={"center_x": .5},
+                        size_hint_x=0.5,
+                        background_color=self.theme_cls.onPrimaryContainerColor,
+                ).open()
+                return False
+        else:
+            MDSnackbar(
+                MDSnackbarSupportingText(text="Nincs szerverkapcsolat!"),
+                    y=dp(24),
+                    pos_hint={"center_x": .5},
+                    size_hint_x=0.5,
+                    background_color=self.theme_cls.onPrimaryContainerColor,
+            ).open()
+            return False    
+
+    def exit_app(self, dialog):  
+        dialog.dismiss()
+        self.get_running_app().stop()
+
 
   
 if __name__ == '__main__':
