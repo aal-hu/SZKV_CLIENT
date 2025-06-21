@@ -79,8 +79,10 @@ class AppScreen(MDScreen):
         self.pin_path = self.get_pin_path()
         self.pin = 0
         self.load_pin()
-        self.update_label("SZKV kávégép app") 
-        self.get_consumer_data()
+        if self.pin == 0:
+            self.update_label("SZKV kávégép app") 
+        else:    
+            self.get_consumer_data()
         #self.list_consumptions()
 
     def get_pin_path(self):
