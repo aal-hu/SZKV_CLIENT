@@ -106,7 +106,8 @@ class AppScreen(MDScreen):
         self.pin = 0
         self.load_pin()
         if self.pin == 0:
-            self.update_label("A PIN kód megadása után \n indítsd újra az alkalmazást!") 
+            # Sikeres PIN megadás után még a self.pin értéke 0 úgyhogy ez lesz a kezdőképernyő
+            self.update_label("A PIN kód rendben, \n az alkalmazás újraindítás után \n lesz használható. \n \n Használata: \n Jobb gomb: Kávé igénylés \n Középső gomb: Kávé igény jóváhagyása \n Bal gomb: Fogyasztások listázása \n ") 
         else:    
             self.get_consumer_data()
 
