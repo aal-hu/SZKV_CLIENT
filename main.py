@@ -67,6 +67,32 @@ if platform == "android":
     from android.permissions import request_permissions, Permission
     request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
 
+def check_pin(self, pin):
+       # Ellenőrizzük, hogy a PIN kód helyes-e
+    response = get_data(f"{BASE_URL}/consumer_data", params={"pin": pin})
+    if response is not None:
+        if response.status_code == 200:
+            return True
+        else:
+            MDSnackbar(
+                MDSnackbarSupportingText(text="Hibás vagy inaktív PIN kód!"),
+                    y=dp(24),
+                    pos_hint={"center_x": .5},
+                    size_hint_x=0.5,
+                    background_color=self.theme_cls.onPrimaryContainerColor,
+            ).open()
+            return False
+    else:
+        MDSnackbar(
+            MDSnackbarSupportingText(text="Nincs szerverkapcsolat!"),
+                y=dp(24),
+                pos_hint={"center_x": .5},
+                size_hint_x=0.5,
+                background_color=self.theme_cls.onPrimaryContainerColor,
+        ).open()
+        return False    
+
+
 
 class PinputScreen(MDScreen):
     pass
@@ -104,6 +130,8 @@ class AppScreen(MDScreen):
         
 
     def send_coffee_request(self):
+        if check_pin(self, self.pin) is False:
+            return
         response = post_data(f"{BASE_URL}/request_coffee", json={"pin": self.pin})
         if response is not None:
             if response.status_code == 200:
@@ -124,8 +152,6 @@ class AppScreen(MDScreen):
                 ).open()
         else:
             self.update_label("Nincs szerverkapcsolat!")
-
-       
 
     def confirm_coffee_request(self):
         response = post_data(f"{BASE_URL}/confirm_coffee_request", json={"pin": self.pin})
@@ -259,7 +285,7 @@ class SzkvApp(App):
 
     def set_pin(self, dialog):
         pin = self.pinput_field.text
-        if len(pin) == 4 and pin.isdigit() and self.check_pin(pin):
+        if len(pin) == 4 and pin.isdigit() and check_pin(self, pin):
             with open(AppScreen().get_pin_path(), 'w') as file:
                 file.write(pin)
             dialog.dismiss()
@@ -267,31 +293,6 @@ class SzkvApp(App):
         else:
             self.pinput_field.error = True 
 
-    def check_pin(self, pin):
-        # Ellenőrizzük, hogy a PIN kód helyes-e
-        response = get_data(f"{BASE_URL}/consumer_data", params={"pin": pin})
-        print(response)
-        if response is not None:
-            if response.status_code == 200:
-                return True
-            else:
-                MDSnackbar(
-                    MDSnackbarSupportingText(text="Hibás PIN kód!"),
-                        y=dp(24),
-                        pos_hint={"center_x": .5},
-                        size_hint_x=0.5,
-                        background_color=self.theme_cls.onPrimaryContainerColor,
-                ).open()
-                return False
-        else:
-            MDSnackbar(
-                MDSnackbarSupportingText(text="Nincs szerverkapcsolat!"),
-                    y=dp(24),
-                    pos_hint={"center_x": .5},
-                    size_hint_x=0.5,
-                    background_color=self.theme_cls.onPrimaryContainerColor,
-            ).open()
-            return False    
 
     def exit_app(self, dialog):  
         dialog.dismiss()
