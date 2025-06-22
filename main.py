@@ -107,7 +107,7 @@ class AppScreen(MDScreen):
         self.load_pin()
         if self.pin == 0:
             # Sikeres PIN megadás után még a self.pin értéke 0 úgyhogy ez lesz a kezdőképernyő
-            self.update_label("A PIN kód rendben, \n az alkalmazás újraindítás után \n lesz használható. \n \n Használata: \n Jobb gomb: Kávé igénylés \n Középső gomb: Kávé igény jóváhagyása \n Bal gomb: Fogyasztások listázása \n ") 
+            self.update_label("A PIN kód rendben, \n az alkalmazás újraindítás után \n lesz használható. \n \n Használata: \n Jobb gomb: Kávé igénylés \n Középső gomb: Kávé igény jóváhagyása \n Bal gomb: Fogyasztás lista \n ") 
         else:    
             self.get_consumer_data()
 
@@ -181,7 +181,7 @@ class AppScreen(MDScreen):
         print(response)
         if response is not None:
             if response.status_code == 200:
-                self.update_label("Bejelentkezett: " + response.json().get('name') + "\n" +
+                self.update_label("Belépve: " + response.json().get('name') + "\n" +
                                   "Fogyasztások: " + str(response.json().get('consumptions'))+ "\n" +
                                   "Fizetendő fogyasztások: " + str(response.json().get('cons_payable')) + " \n" +
                                   "Fizetendő összeg: " + str(response.json().get('payable')) + " Ft\n")
@@ -254,8 +254,11 @@ class SzkvApp(App):
                 max_text_length=4
             ),
             mode="outlined",
-            size_hint=(0.9, None),
-            height=70,
+            #size_hint=(0.9, None),
+            size_hint_y=None,
+            height=dp(90),
+            font_style="Headline",
+            role="medium",
             pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
         dialog = MDDialog(
