@@ -2,7 +2,6 @@ ScreenManager:
     PinputScreen:
     AppScreen:
     ListScreen:
-        id: list_screen
 
 <PinputScreen>:
     name: "pinput"
@@ -26,13 +25,6 @@ ScreenManager:
             text_size: self.width, None
             #size_hint: (1, 0.2)
             pos_hint: {"x": 0.05, "top": 0.95}
-
-        #MDScrollView:
-            #size_hint: (1, 1)
-            #pos_hint: {"top": .9, "bottom": 0, "left": 0, "right": 1 }
-
-            #MDList:
-                #id: list_cons
    
     MDBoxLayout:
         orientation: 'horizontal'
@@ -44,7 +36,8 @@ ScreenManager:
             icon: "view-list"
             style: "standard"            
             #on_release: root.list_consumptions(); app.root.current = "cons_list"
-            on_release: root.uc()
+            on_release: app.root.current = "cons_list"; root.uc()
+            #on_release: root.uc()
         MDFabButton:
             icon: "coffee-maker-check"
             style: "standard"            
@@ -62,12 +55,39 @@ ScreenManager:
         orientation: 'vertical'
         size_hint: (1,1)
 
+        MDLabel:
+            text: "Fogyasztás lista"
+            font_style: "Headline"
+            role: "medium"
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.width, None
+            pos_hint: {"x": 0.05, "top": 0.9}
+
         MDScrollView:
             size_hint: (1, 1)
             pos_hint: {"top": .9, "bottom": 0, "left": 0, "right": 1 }
             MDList:
-                #id: root.app_screen.list.cons
+                id: list_cons
 
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1, 0.3)
+            padding: dp(40)
+            spacing: dp(60)
+
+            MDFabButton:
+                icon: "arrow-collapse-left"
+                style: "standard"            
+                #on_release: root.list_consumptions(); app.root.current = "cons_list"
+                on_release: app.root.current = "app_screen"                
+
+            #MDButton:
+                #style: "elevated"
+                #on_release: app.root.current = "app_screen"
+                #MDButtonText:
+                    #text: "Vissza"
 
 
 

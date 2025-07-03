@@ -25,7 +25,7 @@ import requests
 from requests.exceptions import RequestException, Timeout, ConnectionError, HTTPError
 from functools import wraps
 import urllib3
-
+from lister import list_widgets
 
 urllib3.disable_warnings()
 
@@ -58,8 +58,8 @@ def post_data(url, data=None, json=None):
     return response
 
 
-#BASE_URL = "https://192.168.0.14:5000"
-BASE_URL = "https://bluefre.ignorelist.com:48000"
+BASE_URL = "https://192.168.0.14:5000"
+#BASE_URL = "https://bluefre.ignorelist.com:48000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
 
@@ -209,6 +209,7 @@ class AppScreen(MDScreen):
 
 
     def uc(self):  
+
         MDSnackbar(
             MDSnackbarSupportingText(text="Under construction... "),
                 y=dp(24),
@@ -221,6 +222,7 @@ class AppScreen(MDScreen):
 class ListScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
 
     pass
 
@@ -235,6 +237,7 @@ class SzkvApp(App):
         return Builder.load_file('szkv.kv')        
    
     def on_start(self):
+        #list_widgets(self.root)                
         # Ellenőrizzük, hogy a pin.txt létezik-e, ha nem, akkor létrehozzuk
         pin_path = AppScreen().get_pin_path()
         if not os.path.exists(pin_path):
@@ -243,7 +246,7 @@ class SzkvApp(App):
                 file.write('0')
         AppScreen().load_pin()        
         if AppScreen().pin == 0:
-            self.root.current = 'pinput'
+            #self.root.current = 'pinput'
             self.show_pinput_dialog()
         else:
             self.root.current = 'app_screen'
@@ -284,6 +287,8 @@ class SzkvApp(App):
             size_hint=(0.8, None),
             height=200,
             pos_hint={"center_x": 0.5, "center_y": 0.5},
+            auto_dismiss=False,
+            radius=[dp(20), dp(20), dp(20), dp(20)],
         )
         dialog.open()
 
