@@ -26,7 +26,6 @@ import requests
 from requests.exceptions import RequestException, Timeout, ConnectionError, HTTPError
 from functools import wraps
 import urllib3
-from lister import list_widgets
 
 urllib3.disable_warnings()
 
@@ -224,7 +223,6 @@ class SzkvApp(App):
         return Builder.load_file('szkv.kv')        
    
     def on_start(self):
-        #list_widgets(self.root)                
         # Ellenőrizzük, hogy a pin.txt létezik-e, ha nem, akkor létrehozzuk
         pin_path = AppScreen().get_pin_path()
         if not os.path.exists(pin_path):
