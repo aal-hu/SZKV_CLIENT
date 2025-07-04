@@ -12,6 +12,7 @@ from kivymd.uix.dialog import (
     MDDialogContentContainer, 
 ) 
 from kivymd.uix.button import MDButton, MDButtonText
+from kivymd.uix.divider import MDDivider
 from kivymd.uix.textfield import (
     MDTextField,
     MDTextFieldHintText,
@@ -58,8 +59,8 @@ def post_data(url, data=None, json=None):
     return response
 
 
-BASE_URL = "https://192.168.0.14:5000"
-#BASE_URL = "https://bluefre.ignorelist.com:48000"
+#BASE_URL = "https://192.168.0.14:5000"
+BASE_URL = "https://bluefre.ignorelist.com:48000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
 
@@ -190,6 +191,11 @@ class AppScreen(MDScreen):
         else:
             self.update_label("Hiba történt az adat lekérésnél!")
 
+
+class ListScreen(MDScreen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def list_consumptions(self):
         list_data = get_data(f"{BASE_URL}/consumption_data",)
         if list_data is not None:
@@ -199,32 +205,13 @@ class AppScreen(MDScreen):
                 print(len(cups))
                 for cup in cups:
                     item = MDListItem( MDListItemHeadlineText(text=cup['name']),
-                            MDListItemSupportingText(text=" "),
+                            MDListItemSupportingText(text=cup['bag_id']+' - '+cup['brand']+' - '+cup['date']+' - '+cup['time']),
                             pos_hint={"center_x": .5, "center_y": .5},
                             size_hint_x=.8)
-                    AppScreen().ids.list_cons.add_widget(item)    
-                    #self.root.ids.list_cons.add_widget(MDDivider())    
+                    self.ids.list_cons.add_widget(item)    
+                    self.ids.list_cons.add_widget(MDDivider())    
             else:
                 self.update_label(f"Hiba történt: {list_data.status_code} - {list_data.text}")
-
-
-    def uc(self):  
-
-        MDSnackbar(
-            MDSnackbarSupportingText(text="Under construction... "),
-                y=dp(24),
-                pos_hint={"center_x": .5},
-                size_hint_x=0.5,
-                background_color=self.theme_cls.onPrimaryContainerColor,
-        ).open()
-
-
-class ListScreen(MDScreen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
-    pass
 
 
 class SzkvApp(App):

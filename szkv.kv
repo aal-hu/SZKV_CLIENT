@@ -2,6 +2,7 @@ ScreenManager:
     PinputScreen:
     AppScreen:
     ListScreen:
+        id: cons_list
 
 <PinputScreen>:
     name: "pinput"
@@ -35,9 +36,7 @@ ScreenManager:
         MDFabButton:
             icon: "view-list"
             style: "standard"            
-            #on_release: root.list_consumptions(); app.root.current = "cons_list"
-            on_release: app.root.current = "cons_list"; root.uc()
-            #on_release: root.uc()
+            on_release: app.root.ids.cons_list.list_consumptions(); app.root.current = "cons_list"
         MDFabButton:
             icon: "coffee-maker-check"
             style: "standard"            
@@ -56,10 +55,11 @@ ScreenManager:
         size_hint: (1,1)
 
         MDLabel:
-            text: "Fogyasztás lista"
+            text: "[u]Fogyasztás lista[/u]"
             font_style: "Headline"
             role: "medium"
-            halign: "left"
+            halign: "center"
+            markup: True
             size_hint_y: None
             height: self.texture_size[1]
             text_size: self.width, None
@@ -74,8 +74,8 @@ ScreenManager:
         MDBoxLayout:
             orientation: 'horizontal'
             size_hint: (1, 0.3)
-            padding: dp(40)
-            spacing: dp(60)
+            padding: dp(20)
+            #spacing: dp(60)
 
             MDFabButton:
                 icon: "arrow-collapse-left"
