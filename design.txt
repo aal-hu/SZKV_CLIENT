@@ -1,0 +1,74 @@
+Belépve: Ásványi László   ← nagyobb, vastag
+Fogyasztások: 18          ← kisebb, középre zárt
+-------------------
+BoxLayout:
+    orientation: "vertical"
+    padding: 20
+    spacing: 20
+
+    MDCard:
+        padding: 20
+        orientation: "vertical"
+        size_hint_y: None
+        height: self.minimum_height
+        md_bg_color: app.theme_cls.bg_light
+
+        MDLabel:
+            text: "[b]Belépve:[/b] Ásványi László"
+            markup: True
+            font_style: "H6"
+
+        MDLabel:
+            text: "Fogyasztások: 18"
+        MDLabel:
+            text: "Fizetendő fogyasztások: 18"
+        MDLabel:
+            text: "[color=#4CAF50]Fizetendő összeg: 0 Ft[/color]"
+            markup: True
+
+    MDBoxLayout:
+        orientation: "horizontal"
+        spacing: 30
+        size_hint_y: None
+        height: dp(80)
+        padding: [20, 0, 20, 0]
+
+        MDIconButton:
+            icon: "format-list-bulleted"
+            user_font_size: "32sp"
+            pos_hint: {"center_y": 0.5}
+
+        MDIconButton:
+            icon: "credit-card-check-outline"
+            user_font_size: "32sp"
+            pos_hint: {"center_y": 0.5}
+
+        MDIconButton:
+            icon: "coffee"
+            user_font_size: "32sp"
+            pos_hint: {"center_y": 0.5}
+------------------------------------------
+MDCard:
+    orientation: "vertical"
+    padding: "24dp"
+    radius: [20, 20, 20, 20]
+    elevation: 6
+    size_hint: None, None
+    size: "300dp", "200dp"
+    pos_hint: {"center_x": 0.5, "center_y": 0.6}
+    md_bg_color: 1, 1, 1, 0.8  # fehér, enyhén átlátszó
+
+    MDLabel:
+        text: "[b]Belépve:[/b] Ásványi László"
+        markup: True
+
+    MDLabel:
+        text: "Fogyasztások: 18"
+
+    MDLabel:
+        text: "Fizetendő fogyasztások: 18"
+
+    MDLabel:
+        text: "Fizetendő összeg: 0 Ft"
+
+
