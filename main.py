@@ -76,7 +76,7 @@ def check_pin(self, pin):
         else:
             MDSnackbar(
                 MDSnackbarSupportingText(text="Hibás vagy inaktív PIN kód!"),
-                    y=dp(24),
+                    y=dp(110),
                     pos_hint={"center_x": .5},
                     size_hint_x=0.5,
                     background_color=self.theme_cls.onPrimaryContainerColor,
@@ -85,7 +85,7 @@ def check_pin(self, pin):
     else:
         MDSnackbar(
             MDSnackbarSupportingText(text="Nincs szerverkapcsolat!"),
-                y=dp(24),
+                y=dp(110),
                 pos_hint={"center_x": .5},
                 size_hint_x=0.5,
                 background_color=self.theme_cls.onPrimaryContainerColor,
@@ -138,7 +138,7 @@ class AppScreen(MDScreen):
             if response.status_code == 200:
                 MDSnackbar(
                     MDSnackbarSupportingText(text="Kávé igény elküldve. \n A jóváhagyáshoz nyomd meg a középső gombot \n 10mp-en belül, különben az igény törlődik. "),
-                        y=dp(24),
+                        y=dp(110),
                         pos_hint={"center_x": .5},
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
@@ -146,7 +146,7 @@ class AppScreen(MDScreen):
             elif response.status_code == 400:
                 MDSnackbar(                
                     MDSnackbarSupportingText(text=response.json().get('error')),
-                        y=dp(24),
+                        y=dp(110),
                         pos_hint={"center_x": .5},
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
@@ -160,7 +160,7 @@ class AppScreen(MDScreen):
             if response.status_code == 200:
                 MDSnackbar(
                     MDSnackbarSupportingText(text="Kávé fogyasztás rögzítve. "),
-                        y=dp(24),
+                        y=dp(110),
                         pos_hint={"center_x": .5},
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
@@ -168,12 +168,16 @@ class AppScreen(MDScreen):
             elif response.status_code == 400:
                 MDSnackbar(                
                     MDSnackbarSupportingText(text=response.json().get('error')),
-                        y=dp(24),
+                        y=dp(110),
                         pos_hint={"center_x": .5},
                         size_hint_x=0.5,
                         background_color=self.theme_cls.onPrimaryContainerColor,
                 ).open()
+        # update user data        
         self.update_label(self.get_consumer_data())
+        # Refresh the consumption list        
+        ListScreen().list_consumptions()
+
        
 
     def get_consumer_data(self ):
@@ -201,7 +205,6 @@ class ListScreen(MDScreen):
             if list_data.status_code == 200:
                 json_data = list_data.json()
                 cups = json_data['data']
-                print(len(cups))
                 for cup in cups:
                     item = MDListItem( MDListItemHeadlineText(text=cup['name']),
                             MDListItemSupportingText(text=cup['bag_id']+' - '+cup['brand']+' - '+cup['date']+' - '+cup['time']),

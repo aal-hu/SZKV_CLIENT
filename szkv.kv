@@ -14,18 +14,24 @@ ScreenManager:
     md_bg_color: app.theme_cls.backgroundColor
 
     MDFloatLayout:    
+ 
+        MDCard:
+            padding: dp(10)
+            orientation: "vertical"
+            style: "outlined"
+ 
+            MDLabel:
+                id: cons_infos
+                text: root.labeltxt
+                font_style: "Headline"
+                role: "small"
+                halign: "left"
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                markup: True
+                pos_hint: {"x": 0.05, "top": 0.95}
 
-        MDLabel:
-            id: cons_infos
-            text: root.labeltxt
-            font_style: "Headline"
-            role: "small"
-            halign: "left"
-            size_hint_y: None
-            height: self.texture_size[1]
-            text_size: self.width, None
-            #size_hint: (1, 0.2)
-            pos_hint: {"x": 0.05, "top": 0.95}
    
     MDBoxLayout:
         orientation: 'horizontal'
@@ -80,14 +86,9 @@ ScreenManager:
             MDFabButton:
                 icon: "arrow-collapse-left"
                 style: "standard"            
-                #on_release: root.list_consumptions(); app.root.current = "cons_list"
                 on_release: app.root.current = "app_screen"                
 
-            #MDButton:
-                #style: "elevated"
-                #on_release: app.root.current = "app_screen"
-                #MDButtonText:
-                    #text: "Vissza"
+
 
 
 
