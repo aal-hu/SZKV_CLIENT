@@ -13,13 +13,16 @@ ScreenManager:
         
     md_bg_color: app.theme_cls.backgroundColor
 
-    MDFloatLayout:    
- 
+    MDBoxLayout:    
+        orientation: "vertical"
+
         MDCard:
-            padding: dp(10)
-            orientation: "vertical"
+            padding: dp(30)
             style: "outlined"
- 
+            #size_hint_y: 0.8
+            size_hint: 0.98, 0.78
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
             MDLabel:
                 id: cons_infos
                 text: root.labeltxt
@@ -33,24 +36,33 @@ ScreenManager:
                 pos_hint: {"x": 0.05, "top": 0.95}
 
    
-    MDBoxLayout:
-        orientation: 'horizontal'
-        size_hint: (1, 0.3)
-        padding: dp(40)
-        spacing: dp(60)
+        MDCard:
+            padding: dp(25)
+            style: "elevated"
+            #size_hint_y: 0.2
+            #size_hint_x: 0.95
+            size_hint: 0.98, 0.18
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}            
+            #halign: "center"
 
-        MDFabButton:
-            icon: "view-list"
-            style: "standard"            
-            on_release: app.root.ids.cons_list.list_consumptions(); app.root.current = "cons_list"
-        MDFabButton:
-            icon: "coffee-maker-check"
-            style: "standard"            
-            on_release: root.confirm_coffee_request()
-        MDFabButton:
-            icon: "coffee"
-            style: "standard"
-            on_release: root.send_coffee_request()
+            MDBoxLayout:
+                orientation: 'horizontal'
+                #size_hint: (1, 0.3)
+                #padding: dp(10)
+                spacing: dp(60)
+
+                MDFabButton:
+                    icon: "view-list"
+                    style: "standard"            
+                    on_release: app.root.ids.cons_list.list_consumptions(); app.root.current = "cons_list"
+                MDFabButton:
+                    icon: "coffee-maker-check"
+                    style: "standard"            
+                    on_release: root.confirm_coffee_request()
+                MDFabButton:
+                    icon: "coffee"
+                    style: "standard"
+                    on_release: root.send_coffee_request()
   
 <ListScreen>:
     name: "cons_list"
