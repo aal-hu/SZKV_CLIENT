@@ -58,8 +58,8 @@ def post_data(url, data=None, json=None):
     return response
 
 
-BASE_URL = "https://192.168.0.14:5000"
-#BASE_URL = "https://bluefre.ignorelist.com:48000"
+#BASE_URL = "https://192.168.0.14:5000"
+BASE_URL = "https://bluefre.ignorelist.com:48000"
 CERT_VERIFY = False  # Set to True if you have a valid SSL certificate
 
 

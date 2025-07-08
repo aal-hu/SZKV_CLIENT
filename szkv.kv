@@ -15,13 +15,11 @@ ScreenManager:
 
     MDBoxLayout:    
         orientation: "vertical"
+        padding: [dp(10), dp(10), dp(10), dp(10) ]
 
         MDCard:
             padding: dp(30)
             style: "outlined"
-            #size_hint_y: 0.8
-            size_hint: 0.98, 0.78
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
             MDLabel:
                 id: cons_infos
@@ -37,18 +35,12 @@ ScreenManager:
 
    
         MDCard:
-            padding: dp(25)
+            padding: dp(32)
             style: "elevated"
-            #size_hint_y: 0.2
-            #size_hint_x: 0.95
-            size_hint: 0.98, 0.18
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}            
-            #halign: "center"
+            size_hint_y: 0.2
 
             MDBoxLayout:
                 orientation: 'horizontal'
-                #size_hint: (1, 0.3)
-                #padding: dp(10)
                 spacing: dp(60)
 
                 MDFabButton:
@@ -71,6 +63,7 @@ ScreenManager:
     MDBoxLayout:
         orientation: 'vertical'
         size_hint: (1,1)
+        padding: dp(10)        
 
         MDLabel:
             text: "[u]Fogyasztás lista[/u]"
@@ -81,19 +74,18 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             text_size: self.width, None
-            pos_hint: {"x": 0.05, "top": 0.9}
+            #pos_hint: {"x": 0.05, "top": 0.9}
 
         MDScrollView:
             size_hint: (1, 1)
-            pos_hint: {"top": .9, "bottom": 0, "left": 0, "right": 1 }
+            #pos_hint: {"top": .9, "bottom": 0, "left": 0, "right": 1 }
             MDList:
                 id: list_cons
 
         MDBoxLayout:
             orientation: 'horizontal'
-            size_hint: (1, 0.3)
+            size_hint: (1, 0.2)
             padding: dp(20)
-            #spacing: dp(60)
 
             MDFabButton:
                 icon: "arrow-collapse-left"
