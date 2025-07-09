@@ -21,18 +21,22 @@ ScreenManager:
             padding: dp(30)
             style: "outlined"
 
-            MDLabel:
-                id: cons_infos
-                text: root.labeltxt
-                font_style: "Headline"
-                role: "small"
-                halign: "left"
-                size_hint_y: None
-                height: self.texture_size[1]
-                text_size: self.width, None
-                markup: True
-                pos_hint: {"x": 0.05, "top": 0.95}
+            MDRelativeLayout:
 
+                FitImage:
+                    source: "background2.png"
+
+                MDLabel:
+                    id: cons_infos
+                    text: root.labeltxt
+                    font_style: "Headline"
+                    role: "small"
+                    halign: "left"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    text_size: self.width, None
+                    markup: True
+                    pos_hint: {"x": 0.05, "top": 0.95}
    
         MDCard:
             padding: dp(32)

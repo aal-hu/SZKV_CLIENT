@@ -159,7 +159,7 @@ class AppScreen(MDScreen):
         if response is not None:
             if response.status_code == 200:
                 MDSnackbar(
-                    MDSnackbarSupportingText(text="Kávé fogyasztás rögzítve. "),
+                    MDSnackbarSupportingText(text="Kávé fogyasztás rögzítve. \n Egészségedre!"),
                         y=dp(110),
                         pos_hint={"center_x": .5},
                         size_hint_x=0.5,
