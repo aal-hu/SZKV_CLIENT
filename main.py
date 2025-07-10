@@ -185,10 +185,10 @@ class AppScreen(MDScreen):
         print(response)
         if response is not None:
             if response.status_code == 200:
-                self.update_label("Belépve: " + response.json().get('name') + "\n" +
-                                  "Fogyasztások: " + str(response.json().get('consumptions'))+ "\n" +
-                                  "Fizetendő fogyasztások: " + str(response.json().get('cons_payable')) + " \n" +
-                                  "Fizetendő összeg: " + str(response.json().get('payable')) + " Ft\n")
+                self.update_label("[b]Üdv a kávézóban " + response.json().get('name').split()[-1] + "![/b]\n\n" +
+                                  "Össz. fogyasztásod: " + str(response.json().get('consumptions'))+ "\n\n" +
+                                  "Fizetendő fogyasztásod: " + str(response.json().get('cons_payable')) + " \n\n" +
+                                  "Fizetendő összeg: [b][color=ff0000]" + str(response.json().get('payable')) + "[/b][/color] Ft\n")
             else:
                 self.update_label(f"Hiba történt: {response.status_code} - {response.text}") 
         else:

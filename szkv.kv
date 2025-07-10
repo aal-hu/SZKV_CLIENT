@@ -18,28 +18,28 @@ ScreenManager:
         padding: [dp(10), dp(10), dp(10), dp(10) ]
 
         MDCard:
-            padding: dp(30)
+            padding: dp(5)
             style: "outlined"
 
             MDRelativeLayout:
 
                 FitImage:
-                    source: "background2.png"
+                    source: "background.png"
 
                 MDLabel:
                     id: cons_infos
                     text: root.labeltxt
                     font_style: "Headline"
                     role: "small"
-                    halign: "left"
+                    halign: "center"
                     size_hint_y: None
                     height: self.texture_size[1]
                     text_size: self.width, None
                     markup: True
-                    pos_hint: {"x": 0.05, "top": 0.95}
+                    pos_hint: {"x": 0.01, "top": 0.8}
    
         MDCard:
-            padding: dp(32)
+            padding: dp(34)
             style: "elevated"
             size_hint_y: 0.2
 
