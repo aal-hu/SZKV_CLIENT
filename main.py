@@ -234,7 +234,6 @@ class SzkvApp(App):
                 file.write('0')
         AppScreen().load_pin()        
         if AppScreen().pin == 0:
-            #self.root.current = 'pinput'
             self.show_pinput_dialog()
         else:
             self.root.current = 'app_screen'
